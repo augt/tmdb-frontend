@@ -5,7 +5,7 @@ import Link from "next/link";
 export default function MovieThumbnail({ movie }: { movie: Movie }) {
   return (
     <Link
-      className="flex flex-col items-center justify-between max-w-80 bg-greyBackground shadow-md rounded-xl p-4"
+      className="flex flex-col items-center justify-between w-80 h-[550px] bg-greyBackground shadow-md rounded-xl p-4"
       href={`/movie/${movie.id}`}
     >
       {movie.poster_path ? (
@@ -16,7 +16,7 @@ export default function MovieThumbnail({ movie }: { movie: Movie }) {
           height={600}
         />
       ) : (
-        <div className="text-gray-500 h-1/2 w-72 flex flex-col justify-center items-center">
+        <div className="text-gray-500  w-72 h-3/4 flex flex-col justify-center items-center">
           <div>(Poster unavailable)</div>
         </div>
       )}
