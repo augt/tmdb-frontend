@@ -1,6 +1,6 @@
 import { Movie } from "@/app/page";
 import axios from "axios";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 type SearchBarProps = {
   setMovieList: Dispatch<SetStateAction<Movie[]>>;
@@ -11,12 +11,15 @@ export default function SearchBar({ setMovieList }: SearchBarProps) {
   const [pageNumber, setPageNumber] = useState(1);
   const [allowFetching, setAllowFetching] = useState(true);
 
-  async function fetchMovies(searchQuery: string, page: number) {
+  async function fetchMovies(searchQuery: string, page?: number) {
     if (!allowFetching) return;
     setAllowFetching(false);
+    searchQuery.replace(" ", "%20").replace("'", "%27");
     try {
       const response = await axios.get(
-        `https://api.themoviedb.org/3/search/movie?query=${searchQuery}&page=${page}`,
+        !searchString
+          ? "https://api.themoviedb.org/3/trending/movie/week"
+          : `https://api.themoviedb.org/3/search/movie?query=${searchQuery}&page=${page}`,
 
         {
           headers: {
@@ -36,8 +39,13 @@ export default function SearchBar({ setMovieList }: SearchBarProps) {
       setTimeout(() => setAllowFetching(true), 1000);
     }
   }
+
+  useEffect(() => {
+    fetchMovies(searchString);
+  }, []);
+
   return (
-    <form className="flex flex-col gap-2 w-full items-center">
+    <form className="flex flex-col gap-4 w-full items-center">
       <input
         type="text"
         className="border-2 border-black w-full p-2 rounded-full text-center md:w-1/2"
@@ -47,7 +55,9 @@ export default function SearchBar({ setMovieList }: SearchBarProps) {
         }}
       ></input>
       <button
-        className="bg-darkBackground text-lightTextColor p-2 w-fit rounded-full"
+        className={`bg-darkBackground text-lightTextColor p-2 w-fit rounded-full ${
+          allowFetching ? "" : "opacity-70 cursor-default"
+        }`}
         onClick={(e) => {
           e.preventDefault();
           fetchMovies(searchString, pageNumber);

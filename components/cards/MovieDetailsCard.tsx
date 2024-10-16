@@ -5,13 +5,13 @@ export default function MovieDetailsCard({ movie }: { movie: Movie }) {
     <div className="bg-greyBackground shadow-md rounded-xl p-4 flex flex-col md:flex-row md:items-start items-center gap-5">
       {movie.poster_path ? (
         <Image
-          src={`https://image.tmdb.org/t/p/w185/${movie.poster_path}`}
+          src={`https://image.tmdb.org/t/p/w300/${movie.poster_path}`}
           alt={`poster of ${movie.title}`}
-          width={185}
-          height={330}
+          width={300}
+          height={600}
         />
       ) : (
-        <div className="text-gray-500 h-1/2 w-44 flex flex-col justify-center items-center">
+        <div className="text-gray-500 h-1/2 w-72 flex flex-col justify-center items-center">
           <div>(Poster unavailable)</div>
         </div>
       )}
