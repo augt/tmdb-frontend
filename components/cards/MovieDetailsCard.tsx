@@ -1,13 +1,8 @@
 import { Movie } from "@/app/page";
 import Image from "next/image";
-import Link from "next/link";
-
-export default function MovieThumbnail({ movie }: { movie: Movie }) {
+export default function MovieDetailsCard({ movie }: { movie: Movie }) {
   return (
-    <Link
-      className="flex flex-col items-center justify-between max-w-48 bg-greyBackground shadow-md rounded-xl p-2"
-      href={`/movie/${movie.id}`}
-    >
+    <div className="bg-greyBackground shadow-md rounded-xl p-4 flex flex-col md:flex-row md:items-start items-center gap-5">
       {movie.poster_path ? (
         <Image
           src={`https://image.tmdb.org/t/p/w185/${movie.poster_path}`}
@@ -20,8 +15,10 @@ export default function MovieThumbnail({ movie }: { movie: Movie }) {
           <div>(Poster unavailable)</div>
         </div>
       )}
-
-      <div className="mt-2 text-center">{movie.title}</div>
-    </Link>
+      <div className="flex flex-col gap-4">
+        <div className="text-xl font-bold">{movie.title}</div>
+        <div>{movie.overview}</div>
+      </div>
+    </div>
   );
 }

@@ -9,8 +9,11 @@ type SearchBarProps = {
 export default function SearchBar({ setMovieList }: SearchBarProps) {
   const [searchString, setSearchString] = useState("");
   const [pageNumber, setPageNumber] = useState(1);
+  const [allowFetching, setAllowFetching] = useState(true);
 
   async function fetchMovies(searchQuery: string, page: number) {
+    if (!allowFetching) return;
+    setAllowFetching(false);
     try {
       const response = await axios.get(
         `https://api.themoviedb.org/3/search/movie?query=${searchQuery}&page=${page}`,
@@ -29,20 +32,22 @@ export default function SearchBar({ setMovieList }: SearchBarProps) {
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setTimeout(() => setAllowFetching(true), 1000);
     }
   }
   return (
-    <div className="flex flex-col gap-2 w-full items-center">
+    <form className="flex flex-col gap-2 w-full items-center">
       <input
         type="text"
-        className="border-2 border-black w-1/2 p-2"
-        placeholder="search for a movie"
+        className="border-2 border-black w-full p-2 rounded-full text-center md:w-1/2"
+        placeholder="Search for a movie"
         onChange={(event) => {
           setSearchString(event.target.value);
         }}
       ></input>
       <button
-        className="bg-darkBackground text-lightTextColor p-2 w-fit"
+        className="bg-darkBackground text-lightTextColor p-2 w-fit rounded-full"
         onClick={(e) => {
           e.preventDefault();
           fetchMovies(searchString, pageNumber);
@@ -50,6 +55,6 @@ export default function SearchBar({ setMovieList }: SearchBarProps) {
       >
         Search
       </button>
-    </div>
+    </form>
   );
 }

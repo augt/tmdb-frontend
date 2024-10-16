@@ -5,8 +5,9 @@ import { Fragment, useState } from "react";
 
 export type Movie = {
   title: string;
-  poster_path: string;
+  poster_path: string | null;
   id: number;
+  overview: string;
 };
 
 export default function Home() {
