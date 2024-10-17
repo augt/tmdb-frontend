@@ -17,6 +17,7 @@ export default function Home() {
   const [maxPage, setMaxPage] = useState(0);
   const [pageToLoad, setPageToLoad] = useState(1);
   const [searchString, setSearchString] = useState("");
+  const [infoMessage, setInfoMessage] = useState("");
 
   async function fetchMovies(searchQuery: string, page: number) {
     if (!allowFetching) return;
@@ -44,10 +45,16 @@ export default function Home() {
           : [...movieList, ...response.data.results]
       );
 
+      if (response.data.results.length === 0) {
+        setInfoMessage("No movie corresponding to your research");
+      } else {
+        setInfoMessage("");
+      }
+
       setMaxPage(response.data.total_pages);
       if (pageToLoad <= maxPage) setPageToLoad(pageToLoad + 1);
     } catch (error) {
-      console.log(error);
+      setInfoMessage("An error has occurred...");
     } finally {
       setTimeout(() => setAllowFetching(true), 1000);
     }
@@ -59,7 +66,7 @@ export default function Home() {
       const entry = entries[0];
       setMyElementIsVisible(entry.isIntersecting);
     });
-    observer.observe(myRef.current);
+    if (myRef.current) observer.observe(myRef.current);
   }, []);
 
   const myRef = useRef<HTMLDivElement>(null);
@@ -89,6 +96,7 @@ export default function Home() {
           </div>
         ))}
       </div>
+      {infoMessage && <div>{infoMessage}</div>}
       <div className="w-full h-5" ref={myRef}></div>
     </main>
   );
