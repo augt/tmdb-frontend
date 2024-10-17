@@ -53,31 +53,34 @@ export default function Home() {
 
       setMaxPage(response.data.total_pages);
       if (pageToLoad <= maxPage) setPageToLoad(pageToLoad + 1);
-    } catch (error) {
+    } catch {
       setInfoMessage("An error has occurred...");
     } finally {
       setTimeout(() => setAllowFetching(true), 1000);
     }
   }
 
+  const infiniteScrollTrigger = useRef<HTMLDivElement>(null);
+
+  const [infiniteScrollTriggerIsVisible, setInfiniteScrollTriggerIsVisible] =
+    useState(false);
+
   useEffect(() => {
     fetchMovies("", pageToLoad);
+
     const observer = new IntersectionObserver((entries) => {
       const entry = entries[0];
-      setMyElementIsVisible(entry.isIntersecting);
+      setInfiniteScrollTriggerIsVisible(entry.isIntersecting);
     });
-    if (myRef.current) observer.observe(myRef.current);
+    if (infiniteScrollTrigger.current)
+      observer.observe(infiniteScrollTrigger.current);
   }, []);
 
-  const myRef = useRef<HTMLDivElement>(null);
-
-  const [myElementIsVisible, setMyElementIsVisible] = useState(false);
-
   useEffect(() => {
-    if (myElementIsVisible && pageToLoad <= maxPage) {
+    if (infiniteScrollTriggerIsVisible && pageToLoad <= maxPage) {
       fetchMovies(searchString, pageToLoad);
     }
-  }, [myElementIsVisible]);
+  }, [infiniteScrollTriggerIsVisible]);
 
   return (
     <main className="p-8 flex flex-col items-center ">
@@ -97,7 +100,7 @@ export default function Home() {
         ))}
       </div>
       {infoMessage && <div>{infoMessage}</div>}
-      <div className="w-full h-5" ref={myRef}></div>
+      <div className="w-full h-5" ref={infiniteScrollTrigger}></div>
     </main>
   );
 }
