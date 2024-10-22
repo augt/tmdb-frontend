@@ -52,7 +52,7 @@ export default function Home() {
       }
 
       setMaxPage(response.data.total_pages);
-      if (pageToLoad <= maxPage) setPageToLoad(pageToLoad + 1);
+      setPageToLoad(pageToLoad + 1);
     } catch {
       setInfoMessage("An error has occurred...");
     } finally {

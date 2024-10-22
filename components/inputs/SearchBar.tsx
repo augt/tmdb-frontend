@@ -15,6 +15,7 @@ export default function SearchBar({
   searchString,
   setSearchString,
   setPageToLoad,
+  pageToLoad,
 }: SearchBarProps) {
   return (
     <form className="flex flex-col gap-4 w-full items-center">
@@ -24,6 +25,7 @@ export default function SearchBar({
         placeholder="Search for a movie"
         onChange={(event) => {
           setSearchString(event.target.value);
+          if (pageToLoad > 1) setPageToLoad(1);
         }}
       ></input>
       <button
@@ -32,7 +34,6 @@ export default function SearchBar({
         }`}
         onClick={(e) => {
           e.preventDefault();
-          setPageToLoad(1);
           fetchMovies(searchString, 1);
         }}
       >
